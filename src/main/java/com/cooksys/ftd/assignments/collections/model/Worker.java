@@ -14,6 +14,10 @@ import java.util.List;
 public class Worker implements Employee {
 
     // TODO: Does this class need private fields? If so, add them here
+    private String workerName = getName();
+    private String managerName = String.valueOf(getManager());
+    private Boolean hasManager = hasManager();
+    private List<Manager> chainOfCommand = getChainOfCommand();
 
     /**
      * TODO: Implement this constructor.
@@ -21,7 +25,10 @@ public class Worker implements Employee {
      * @param name the name of the worker to be created
      */
     public Worker(String name) {
-        throw new MissingImplementationException();
+        if (name == null)
+            throw new IllegalArgumentException("Worker must have a name.");
+        else
+            workerName = name;
     }
 
     /**
@@ -31,7 +38,11 @@ public class Worker implements Employee {
      * @param manager the direct manager of the worker to be created
      */
     public Worker(String name, Manager manager) {
-        throw new MissingImplementationException();
+        if (name == null)
+            throw new IllegalArgumentException("Worker must have a name.");
+        else
+            workerName = name;
+            managerName = manager.getName();
     }
 
     /**
@@ -41,7 +52,8 @@ public class Worker implements Employee {
      */
     @Override
     public String getName() {
-        throw new MissingImplementationException();
+        Worker workerObj = new Worker(workerName);
+        return workerName;
     }
 
     /**
@@ -51,7 +63,8 @@ public class Worker implements Employee {
      */
     @Override
     public boolean hasManager() {
-        throw new MissingImplementationException();
+        Worker workerObj = new Worker(workerName);
+        return workerObj.hasManager();
     }
 
     /**
@@ -61,7 +74,11 @@ public class Worker implements Employee {
      */
     @Override
     public Manager getManager() {
-        throw new MissingImplementationException();
+        Worker workerObj = new Worker(workerName);
+        if (!workerObj.hasManager())
+            return null;
+        else
+            return workerObj.getManager();
     }
 
     /**

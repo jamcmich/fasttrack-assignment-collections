@@ -14,6 +14,10 @@ import java.util.List;
 public class Manager implements Employee {
 
     // TODO: Does this class need private fields? If so, add them here
+    private String employeeName = getName();
+    private String managerName = String.valueOf(getManager());
+    private Boolean hasManager = hasManager();
+    private List<Manager> chainOfCommand = getChainOfCommand();
 
     /**
      * TODO: Implement this constructor.
@@ -21,7 +25,10 @@ public class Manager implements Employee {
      * @param name the name of the manager to be created
      */
     public Manager(String name) {
-        throw new MissingImplementationException();
+        if (name == null)
+            throw new IllegalArgumentException("Manager must have a name.");
+        else
+            managerName = name;
     }
 
     /**
@@ -31,7 +38,11 @@ public class Manager implements Employee {
      * @param manager the direct manager of the manager to be created
      */
     public Manager(String name, Manager manager) {
-        throw new MissingImplementationException();
+        if (name == null)
+            throw new IllegalArgumentException("Manager must have a name.");
+        else
+            managerName = name;
+            Manager managerObj = manager;
     }
 
     /**
