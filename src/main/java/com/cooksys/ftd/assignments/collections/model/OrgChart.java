@@ -12,7 +12,7 @@ public class OrgChart {
     //  Add those fields here. Consider how you want to store the data, and which collection types to use to make
     //  implementing the other methods as easy as possible. There are several different ways to approach this problem, so
     //  experiment and don't be afraid to change how you're storing your data if it's not working out!
-    private HashMap<String, String> employeeList = new HashMap<>();
+    private Set<Employee> employeeList = new HashSet<>();
 
     /**
      * TODO: Implement this method
@@ -37,7 +37,25 @@ public class OrgChart {
      * @return true if the {@code Employee} was added successfully, false otherwise
      */
     public boolean addEmployee(Employee employee) {
-        throw new MissingImplementationException();
+        if (employeeList.contains(employee) || employee == null) {
+            return false;
+        }
+
+        if (employee.hasManager() && !employeeList.contains(employee.getManager())) {
+            employeeList.add(employee.getManager());
+            employeeList.add(employee);
+            return true;
+        }
+
+        if (!employee.hasManager() && employee instanceof Manager) {
+            employeeList.add(employee);
+            return true;
+        }
+
+        if (!employee.hasManager() && !(employee instanceof Manager)) {
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -49,7 +67,7 @@ public class OrgChart {
      * @return true if the {@code Employee} has been added to the {@code OrgChart}, false otherwise
      */
     public boolean hasEmployee(Employee employee) {
-        throw new MissingImplementationException();
+        return employeeList.contains(employee);
     }
 
     /**
@@ -63,7 +81,7 @@ public class OrgChart {
      *         been added to the {@code OrgChart}
      */
     public Set<Employee> getAllEmployees() {
-        throw new MissingImplementationException();
+        return employeeList;
     }
 
     /**
@@ -77,7 +95,14 @@ public class OrgChart {
      *         have been added to the {@code OrgChart}
      */
     public Set<Manager> getAllManagers() {
-        throw new MissingImplementationException();
+        Set<Manager> managerList = new HashSet<>();
+
+        for (Employee employee : employeeList) {
+            if (employee instanceof Manager) {
+                managerList.add((Manager) employee);
+            }
+        }
+        return managerList;
     }
 
     /**
@@ -98,7 +123,14 @@ public class OrgChart {
      *         or if there are no subordinates for the given {@code Manager}
      */
     public Set<Employee> getDirectSubordinates(Manager manager) {
-        throw new MissingImplementationException();
+        Set<Employee> subordinateList = new HashSet<>();
+
+        for (Employee employee : employeeList) {
+            if (employee.getManager() == manager) {
+                subordinateList.add(employee);
+            }
+        }
+        return subordinateList;
     }
 
     /**
@@ -114,11 +146,18 @@ public class OrgChart {
      *  either in its keys or values. An empty {@code Map} should be returned if the {@code OrgChart} is empty.
      *
      * @return a map in which the keys represent the parent {@code Manager}s in the
-     *         {@code OrgChart}, and the each value is a set of the direct subordinates of the
+     *         {@code OrgChart}, and the value is a set of the direct subordinates of the
      *         associated {@code Manager}, or an empty map if the {@code OrgChart} is empty.
      */
     public Map<Manager, Set<Employee>> getFullHierarchy() {
-        throw new MissingImplementationException();
+        Map< Manager, Set<Employee> > employeeMap = new HashMap<>();
+
+        for (Employee employee : employeeList) {
+            if (employee instanceof Manager) {
+                employeeMap.put((Manager) employee, getDirectSubordinates((Manager) employee));
+            }
+        }
+        return employeeMap;
     }
 
 }

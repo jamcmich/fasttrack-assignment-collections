@@ -1,8 +1,11 @@
 package com.cooksys.ftd.assignments.collections.model;
 
-import com.cooksys.ftd.assignments.collections.util.MissingImplementationException;
+//import com.cooksys.ftd.assignments.collections.util.MissingImplementationException;
 
+import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO: Implement this class
@@ -14,21 +17,15 @@ import java.util.List;
 public class Manager implements Employee {
 
     // TODO: Does this class need private fields? If so, add them here
-    private String employeeName = getName();
-    private String managerName = String.valueOf(getManager());
-    private Boolean hasManager = hasManager();
-    private List<Manager> chainOfCommand = getChainOfCommand();
-
+    private String name;
+    private Manager manager;
     /**
      * TODO: Implement this constructor.
      *
      * @param name the name of the manager to be created
      */
     public Manager(String name) {
-        if (name == null)
-            throw new IllegalArgumentException("Manager must have a name.");
-        else
-            managerName = name;
+        this.name = name;
     }
 
     /**
@@ -38,11 +35,8 @@ public class Manager implements Employee {
      * @param manager the direct manager of the manager to be created
      */
     public Manager(String name, Manager manager) {
-        if (name == null)
-            throw new IllegalArgumentException("Manager must have a name.");
-        else
-            managerName = name;
-            Manager managerObj = manager;
+        this.name = name;
+        this.manager = manager;
     }
 
     /**
@@ -52,7 +46,7 @@ public class Manager implements Employee {
      */
     @Override
     public String getName() {
-        throw new MissingImplementationException();
+        return this.name;
     }
 
     /**
@@ -62,7 +56,7 @@ public class Manager implements Employee {
      */
     @Override
     public boolean hasManager() {
-        throw new MissingImplementationException();
+        return this.manager != null;
     }
 
     /**
@@ -72,7 +66,7 @@ public class Manager implements Employee {
      */
     @Override
     public Manager getManager() {
-        throw new MissingImplementationException();
+        return this.manager;
     }
 
     /**
@@ -90,11 +84,39 @@ public class Manager implements Employee {
      */
     @Override
     public List<Manager> getChainOfCommand() {
-        throw new MissingImplementationException();
+        List<Manager> chainOfCommand = new ArrayList<>();
+        Manager currentManager = this.manager;
+
+        while (currentManager != null) {
+            chainOfCommand.add(currentManager);
+            currentManager = currentManager.getManager();
+        }
+
+        return chainOfCommand;
     }
 
     // TODO: Does this class need custom .equals() and .hashcode() methods? If so, implement them here.
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Manager manager1 = (Manager) o;
+        return Objects.equals(name, manager1.name) && Objects.equals(manager, manager1.manager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, manager);
+    }
+
     // TODO [OPTIONAL]: Consider adding a custom .toString() method here if you want to debug your code with System.out.println() statements
 
+    @Override
+    public String toString() {
+        return "Manager{" +
+                "name='" + name + '\'' +
+                ", manager=" + manager +
+                '}';
+    }
 }

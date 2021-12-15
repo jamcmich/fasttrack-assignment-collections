@@ -1,8 +1,11 @@
 package com.cooksys.ftd.assignments.collections.model;
 
-import com.cooksys.ftd.assignments.collections.util.MissingImplementationException;
+//import com.cooksys.ftd.assignments.collections.util.MissingImplementationException;
 
+import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO: Implement this class
@@ -14,10 +17,8 @@ import java.util.List;
 public class Worker implements Employee {
 
     // TODO: Does this class need private fields? If so, add them here
-    private String workerName = getName();
-    private String managerName = String.valueOf(getManager());
-    private Boolean hasManager = hasManager();
-    private List<Manager> chainOfCommand = getChainOfCommand();
+    private String name;
+    private Manager manager;
 
     /**
      * TODO: Implement this constructor.
@@ -25,10 +26,7 @@ public class Worker implements Employee {
      * @param name the name of the worker to be created
      */
     public Worker(String name) {
-        if (name == null)
-            throw new IllegalArgumentException("Worker must have a name.");
-        else
-            workerName = name;
+        this.name = name;
     }
 
     /**
@@ -38,11 +36,8 @@ public class Worker implements Employee {
      * @param manager the direct manager of the worker to be created
      */
     public Worker(String name, Manager manager) {
-        if (name == null)
-            throw new IllegalArgumentException("Worker must have a name.");
-        else
-            workerName = name;
-            managerName = manager.getName();
+        this.name = name;
+        this.manager = manager;
     }
 
     /**
@@ -52,8 +47,7 @@ public class Worker implements Employee {
      */
     @Override
     public String getName() {
-        Worker workerObj = new Worker(workerName);
-        return workerName;
+        return this.name;
     }
 
     /**
@@ -63,8 +57,7 @@ public class Worker implements Employee {
      */
     @Override
     public boolean hasManager() {
-        Worker workerObj = new Worker(workerName);
-        return workerObj.hasManager();
+        return this.manager != null;
     }
 
     /**
@@ -74,11 +67,7 @@ public class Worker implements Employee {
      */
     @Override
     public Manager getManager() {
-        Worker workerObj = new Worker(workerName);
-        if (!workerObj.hasManager())
-            return null;
-        else
-            return workerObj.getManager();
+        return this.manager;
     }
 
     /**
@@ -96,10 +85,39 @@ public class Worker implements Employee {
      */
     @Override
     public List<Manager> getChainOfCommand() {
-        throw new MissingImplementationException();
+        List<Manager> chainOfCommand = new ArrayList<>();
+        Manager currentManager = manager;
+
+        while (currentManager != null) {
+            chainOfCommand.add(currentManager);
+            currentManager = currentManager.getManager();
+        }
+
+        return chainOfCommand;
     }
 
     // TODO: Does this class need custom .equals() and .hashcode() methods? If so, implement them here.
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Worker worker = (Worker) o;
+        return Objects.equals(name, worker.name) && Objects.equals(manager, worker.manager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, manager);
+    }
+
     // TODO [OPTIONAL]: Consider adding a custom .toString() method here if you want to debug your code with System.out.println() statements
+
+    @Override
+    public String toString() {
+        return "Worker{" +
+                "name='" + name + '\'' +
+                ", manager=" + manager +
+                '}';
+    }
 }
