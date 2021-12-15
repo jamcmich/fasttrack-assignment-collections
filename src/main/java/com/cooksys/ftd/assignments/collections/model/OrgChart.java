@@ -37,25 +37,42 @@ public class OrgChart {
      * @return true if the {@code Employee} was added successfully, false otherwise
      */
     public boolean addEmployee(Employee employee) {
-        if (employeeList.contains(employee) || employee == null) {
+        boolean isAdded = false;
+        if (employee == null) {
             return false;
         }
 
-        if (employee.hasManager() && !employeeList.contains(employee.getManager())) {
-            employeeList.add(employee.getManager());
-            employeeList.add(employee);
-            return true;
-        }
+        if (employee.getClass() == Manager.class) {
+            if (!employeeList.contains(employee)) {
+                employeeList.add(employee);
+                isAdded = true;
+            }
 
-        if (!employee.hasManager() && employee instanceof Manager) {
-            employeeList.add(employee);
-            return true;
-        }
+            while (employee.hasManager()) {
+                if (!employeeList.contains(employee.getManager())) {
+                    employeeList.add(employee.getManager());
+                    isAdded = true;
+                }
+                employee = employee.getManager();
+            }
 
-        if (!employee.hasManager() && !(employee instanceof Manager)) {
-            return false;
+        } else {
+            if (employee.hasManager()) {
+                if (!employeeList.contains(employee)) {
+                    employeeList.add(employee);
+                    isAdded = true;
+                }
+
+                while (employee.hasManager()) {
+                    if (!employeeList.contains(employee.getManager())) {
+                        employeeList.add(employee.getManager());
+                        isAdded = true;
+                    }
+                    employee = employee.getManager();
+                }
+            }
         }
-        return false;
+        return isAdded;
     }
 
     /**
@@ -81,7 +98,8 @@ public class OrgChart {
      *         been added to the {@code OrgChart}
      */
     public Set<Employee> getAllEmployees() {
-        return employeeList;
+        Set<Employee> allEmployees = new HashSet<>(employeeList);
+        return allEmployees;
     }
 
     /**
